@@ -11,7 +11,18 @@ This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/G
 NOTE: I have tested this only with a very small Gitlab wiki project. 
 
 List of subpages and backlinks are listed at the end of the page. 
-This tags the generated wiki content with special comments in the page.
+This tags the generated wiki content with special comments in the page. See below:
+```
+[//]: # "Subpages begin THIS IS AUTOMATICALLY GENERATED DO NOT EDIT MANUALLY"
+...
+[//]: # "Subpages end THIS IS AUTOMATICALLY GENERATED DO NOT EDIT MANUALLY"
+```
+
+
+## Already known issues
+- wiki pages MUST use markdown, this will breake other formats
+- page slug must be ASCII only. Gitlab wiki UI accepts UTF8 in the page slug but such slugs cause problems in the API
+  
 
 ## Installation
 Ubuntu
