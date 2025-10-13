@@ -6,8 +6,7 @@ Sub pages are listed in the parent page.
 Backlinks are listed in the target page. ("who has a link to this page")
 Example: page A has a link to page B. 
 
-This is written in PHP 8. This uses [[GitLab PHP API Client|https://github.com/GitLabPHP/Client/]]
-
+This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/GitLabPHP/Client/)
 ## Installation
 Ubuntu
 ```
@@ -19,7 +18,7 @@ apt install php  php-mbstring  php-xml
 ```
 
 ## Configuration
-You need Gitlab wiki [[Access Token|https://docs.gitlab.com/user/project/settings/project_access_tokens/]] and the project name.
+You need Gitlab wiki [Access Token](https://docs.gitlab.com/user/project/settings/project_access_tokens/) and the project name.
 
 Use config.example.php as an example and create file config.php. Set at least parameters serverUrl, authToken and projectName.
 
