@@ -2,10 +2,10 @@
 return [
 	'serverUrl'=>'https://gitlab.myserver.fi',
 	'authToken'=>'glpat-oxxxxxxxxxxxxx',
-	'projectName'=>'Koe projekti A',
-	'BacklinksTitle'=>'Tähän viittaavat',
+	'projectName'=>'My testproject A',
+	'BacklinksTitle'=>'Backlinks',
 	'BacklinksLevel'=>'#',
-	'SubpagesTitle'=>'Alisivut',
+	'SubpagesTitle'=>'Subpages',
 	'SubpagesLevel'=>'#',
 ];
 
