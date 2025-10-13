@@ -28,9 +28,36 @@ Use config.example.php as an example and create file config.php. Set at least pa
 This action just pulls the pages from Gitlab wiki and makes the changes. This does NOT update content in Gitlab.
 You can view the proposed changes in fikes ../work/MD/...
 
+```
+php get.php
+```
+
+This creates file ../work/dump.json with the wiki content. Modified pages have property 'content_old' with the original content. 
+
+
 ### Update pages
 This action makes changes to wiki pages and updates content in Gitlab. 
 NOTE: Only changed pages are updated in Gitlab wiki. 
+```
+./update-Gitlab-links.sh
+```
+or
+```
+php get-and-put.php
+```
+
+### Just put pages back to Gitlab wiki
+This action puts changed pages to Gitlab
+```
+php put.php
+```
+
+
+
+
+
+
+
 
 ## Logs
 Logfile is ../work/log/YYYY-MM-DD.log
