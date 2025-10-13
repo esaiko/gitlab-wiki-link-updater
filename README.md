@@ -10,11 +10,14 @@ This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/G
 ## Installation
 Ubuntu
 ```
-apt install php  php-mbstring  php-xml
+apt install php  php-mbstring  php-xml git
 ```
 
 ```
+mkdir gitlab-tool && cd gitlab-tool
+git@github.com:esaiko/gitlab-wiki-link-updater.git
 ./composer.sh require "m4tthumphrey/php-gitlab-api:^12.0" "guzzlehttp/guzzle:^7.9.2"
+
 ```
 
 ## Configuration
