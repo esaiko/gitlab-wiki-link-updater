@@ -7,6 +7,12 @@ Backlinks are listed in the target page. ("who has a link to this page")
 Example: page A has a link to page B. 
 
 This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/GitLabPHP/Client/)
+
+NOTE: I have tested this only with a very small Gitlab wiki project. 
+
+List of subpages and backlinks are listed at the end of the page. 
+This tags the generated wiki content with special comments in the page.
+
 ## Installation
 Ubuntu
 ```
