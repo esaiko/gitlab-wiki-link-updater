@@ -18,4 +18,23 @@ apt install php  php-mbstring  php-xml
 ./composer.sh require "m4tthumphrey/php-gitlab-api:^12.0" "guzzlehttp/guzzle:^7.9.2"
 ```
 
+## Configuration
+You need Gitlab wiki [[Access Token|https://docs.gitlab.com/user/project/settings/project_access_tokens/]] and the project name.
+
+Use config.example.php as an example and create file config.php. Set at least parameters serverUrl, authToken and projectName.
+
+## Usage
+
+### Pull pages
+This action just pulls the pages from Gitlab wiki and makes the changes. This does NOT update content in Gitlab.
+You can view the proposed changes in fikes ../work/MD/...
+
+### Update pages
+This action makes changes to wiki pages and updates content in Gitlab. 
+NOTE: Only changed pages are updated in Gitlab wiki. 
+
+## Logs
+Logfile is ../work/log/YYYY-MM-DD.log
+
+
 
