@@ -6,9 +6,11 @@ Sub pages are listed in the parent page.
 Backlinks are listed in the target page. ("who has a link to this page")
 Example: page A has a link to page B. 
 
-This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/GitLabPHP/Client/)
+I wrote this because I did not find any tool or extension to Gitlab wiki that would automatically maintain the list of subpages in the parent page content, or maintain list of "who is linking to this page" on a page.
+I hate maintaining such stuff manually. 
 
-NOTE: I have tested this only with a very small Gitlab wiki project. 
+
+NOTE: I have tested this only with a very small Gitlab wiki project. I am NOT an expert on Gitlab wiki - there may very well be better ways to achieve what I have done with this.
 
 List of subpages and backlinks are listed at the end of the page. 
 This tags the generated wiki content with special comments in the page. See below:
@@ -18,8 +20,10 @@ This tags the generated wiki content with special comments in the page. See belo
 [//]: # "Subpages end THIS IS AUTOMATICALLY GENERATED DO NOT EDIT MANUALLY"
 ```
 
+This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/GitLabPHP/Client/)
 
 ## Already known issues
+- this is not using webhooks and you must run this in cron
 - wiki pages MUST use markdown, this will breake other formats
 - page slug must be ASCII only. Gitlab wiki UI accepts UTF8 in the page slug but such slugs cause problems in the API
   
@@ -71,8 +75,6 @@ This action puts changed pages to Gitlab
 ```
 php put.php
 ```
-
-
 
 
 
