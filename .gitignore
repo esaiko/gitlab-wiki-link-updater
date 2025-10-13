@@ -1,0 +1,10 @@
+vendor
+work
+data
+config.php
+composer.phar
+composer.lock
+composer.json
+*.tmp
+*.swp
+
