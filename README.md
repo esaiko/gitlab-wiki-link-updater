@@ -35,7 +35,9 @@ apt install php  php-mbstring  php-xml git
 
 ```
 mkdir gitlab-tool && cd gitlab-tool
-git@github.com:esaiko/gitlab-wiki-link-updater.git
+
+git clone git@github.com:esaiko/gitlab-wiki-link-updater.git
+
 ./composer.sh require "m4tthumphrey/php-gitlab-api:^12.0" "guzzlehttp/guzzle:^7.9.2"
 
 ```
