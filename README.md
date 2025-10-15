@@ -37,8 +37,12 @@ apt install php  php-mbstring  php-xml git
 mkdir gitlab-tool && cd gitlab-tool
 
 git clone git@github.com:esaiko/gitlab-wiki-link-updater.git
-
+cd gitlab-wiki-link-updater
 ./composer.sh require "m4tthumphrey/php-gitlab-api:^12.0" "guzzlehttp/guzzle:^7.9.2"
+
+# create a writable directory for logs and dump files
+# this must be writable by your web server if you use webhooks.
+mkdir ../work && chmod 777 ../work
 
 ```
 
@@ -81,11 +85,12 @@ php putAll.php [../work/debugData/wikipages.json]
 ```
 
 ## Webhook 
+### Configure webhook
 Configure a webserver as your webhook server. 
 Example Apache:
 ```
-Alias "/webhook" /usr/local/gitlab-hack/src/webhook.php
-<Directory /usr/local/gitlab-hack/src>
+Alias "/webhook" /usr/local/gitlab-tool/gitlab-wiki-link-updater/webhook.php
+<Directory /usr/local/gitlab-tool/gitlab-wiki-link-updater>
    Require all granted
    DirectoryIndex index.php index.html
    Options Indexes FollowSymLinks MultiViews
@@ -93,10 +98,38 @@ Alias "/webhook" /usr/local/gitlab-hack/src/webhook.php
 </Directory>
 ```
 
-Exit src/config.php and set webhook.secret and webhook.enableUpdate.
+Edit src/config.php and set webhook.secret and webhook.enableUpdate.
 
-Add webhook in Gitlab. You probably must allow outgoing connections, too, unless you run webhooks locally in Gitlab server (127.0.0.1).
+Add webhook in Gitlab. 
+Example:
+```
+URL: https://gitlab-webhook.mydomain.fi:9443/webhook
+Secret token: your secret
+```
 
+You probably must allow outgoing connections, too, unless you run webhooks locally in Gitlab server (127.0.0.1).
+
+### Test webhook
+
+Point your browser to you webhook server (example: https://gitlab-webhook.mydomain.fi:9443/webhook). The response should be 'invalid X-Gitlab-Event'.
+Check also logs in your webhook server work/logs/YYYY-MM-DD.log:
+```
+2025-10-15 11:10:59 [688458] INFO HTTP 404 invalid X-Gitlab-Event
+```
+
+Test in Gitlab: select the webhook in Gitlab and click on Test -> Wiki page events. You should see response 'Hook executed successfully: HTTP 200'.  
+Check also logs in your webhook server work/logs/YYYY-MM-DD.log:
+```
+2025-10-15 11:12:05 [688841] INFO getAll begin processing
+2025-10-15 11:12:05 [688841] INFO Project Koe projekti A , processing 8 pages
+2025-10-15 11:12:05 [688841] INFO Changed project Koe projekti A page home
+2025-10-15 11:12:05 [688841] INFO processed 8 pages ,changing 0 pages
+2025-10-15 11:12:05 [688841] INFO Dumped md files in /usr/local/gitlab-hack/work/MD
+2025-10-15 11:12:05 [688841] INFO getAll end processing
+2025-10-15 11:12:05 [688841] INFO putAll begin processing
+2025-10-15 11:12:05 [688841] INFO putAll end processing updated 0 pages
+2025-10-15 11:12:05 [688841] INFO HTTP 200 updated 0 pages
+```
 
 
 ## Logs
