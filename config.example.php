@@ -7,5 +7,9 @@ return [
 	'BacklinksLevel'=>'#',
 	'SubpagesTitle'=>'Subpages',
 	'SubpagesLevel'=>'#',
+    'webhook'=>[
+        'secret'=>'change this value',
+        'enableUpdate'=>true,
+    ],
 ];
 
