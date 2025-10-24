@@ -23,9 +23,6 @@ This tags the generated wiki content with special comments in the page. See belo
 
 This is written in PHP 8. This uses [GitLab PHP API Client](https://github.com/GitLabPHP/Client/)
 
-## Already known issues
-- page slug must be ASCII only. Gitlab wiki UI accepts UTF8 in the page slug but such slugs cause problems in the API
-  
 
 ## Installation
 Ubuntu
