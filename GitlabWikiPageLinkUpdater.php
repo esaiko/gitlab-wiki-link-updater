@@ -59,6 +59,7 @@ class GitlabWikiPageLinkUpdater {
 		$this->client->authenticate($this->authToken, Gitlab\Client::AUTH_HTTP_TOKEN);
 	}
 	public function webhook(){
+		$this->info(__FUNCTION__,'begin processing');
 		$this->verifyWebhookRequest();
 		$data=json_decode(file_get_contents('php://input'),true);
 		$this->verifyWebhookData($data);
@@ -84,7 +85,7 @@ class GitlabWikiPageLinkUpdater {
 		if(empty($data['object_attributes']) || $data['object_attributes']['format']!='markdown'){
 			$this->webExit(200,'skip format');
 		}
-		if(!in_array($data['object_attributes']['action'],['create','update'])){
+		if(!in_array($data['object_attributes']['action'],['create','update','delete'])){
 			$this->webExit(200,'skip action');
 		}
 	}
@@ -268,6 +269,7 @@ class GitlabWikiPageLinkUpdater {
                     $this->backlinks[$slug][]=$page['slug'];
 		    }
 		}
+        return $this->backlinks;
 	}
 	protected function collect_subpages(){
 		foreach($this->wikipages as $page){
@@ -292,12 +294,13 @@ class GitlabWikiPageLinkUpdater {
                 }
 		    }
 		}
+        return $this->subpages;
 	}
 	protected function process_wikipages(){
 		$n=0;
 		foreach($this->wikipages as &$page){
 		    $page=$this->process_page($page);
-		    if(!empty($page['content_orig']))
+		    if(isset($page['content_orig']))
 			    $n++;
 		}
 		$this->info('processed',count($this->wikipages),'pages',',changing',$n,'pages');
@@ -328,18 +331,30 @@ class GitlabWikiPageLinkUpdater {
 		if(!$wikipages)
 			$wikipages=$this->wikipages;
 		$n=0;
+        $err=0;
 		foreach($wikipages as $page){
-		    if(empty($page['content_orig']))
-			continue;
+		    if(!isset($page['content_orig']))
+			    continue;
 		    $params=[
 			    'content'=>$page['content'],
 			    'title'=>$page['title']
 		    ];
-		    $res=$this->client->wiki()->update($this->project['id'],$page['slug'],$params);
-		    $this->info('Updated project',$this->project['name'],'page',$page['slug']);
-		    $n++;
+            try {
+                $res = $this->client->wiki()->update($this->project['id'], $page['slug'], $params);
+            } catch (Exception $e) {
+                $this->err(__FUNCTION__,__LINE__,'wiki->update() failed on page slug:"'.$page['slug'].'", error:',$e->getMessage());
+                $err++;
+                continue;
+            }
+            if(!$res){
+                $this->err(__FUNCTION__,__LINE__,'wiki->update() failed on page '.$page['slug']);
+                $err++;
+                continue;
+            }
+            $this->info('Updated project', $this->project['name'], 'page', $page['slug']);
+            $n++;
 		}
-		$this->info(__FUNCTION__,'end processing','updated',$n,'pages');
+		$this->info(__FUNCTION__,'end processing','updated',$n,'pages','errors',$err);
 		return $n;
 	}
 	protected function webExit($status,...$message){
@@ -362,6 +377,7 @@ class GitlabWikiPageLinkUpdater {
 			[
 				date('Y-m-d H:i:s'),
 				'['.getmypid().']',
+				'SID="'.session_id().'"',
 				$level,
 				$message,
 			])."\n",FILE_APPEND);
