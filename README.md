@@ -47,6 +47,10 @@ mkdir ../work && chmod 777 ../work
 You need Gitlab wiki [Access Token](https://docs.gitlab.com/user/project/settings/project_access_tokens/) and the project name.
 
 Use config.example.php as an example and create file config.php. 
+```
+cp config.example.php config.php
+```
+Edit file config.php.
 Set at least following parameters:
 * serverUrl (this is your Gitlab server)
 * authToken  (this is the access token in your Gitlab server)
@@ -106,7 +110,7 @@ Alias "/webhook" /usr/local/gitlab-tool/gitlab-wiki-link-updater/webhook.php
 </Directory>
 ```
 
-Edit src/config.php and set parameters:
+Edit file config.php and set parameters:
 * webhook.secret (this is the secret you configured in your Gitlab server)
 * webhook.enableUpdate (set this to _true_ to push changes back to your Gitlab server)
 
