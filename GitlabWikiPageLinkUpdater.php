@@ -59,6 +59,9 @@ class GitlabWikiPageLinkUpdater {
 		$this->client->authenticate($this->authToken, Gitlab\Client::AUTH_HTTP_TOKEN);
 	}
 	public function webhook(){
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 		$this->info(__FUNCTION__,'begin processing');
 		$this->verifyWebhookRequest();
 		$data=json_decode(file_get_contents('php://input'),true);
