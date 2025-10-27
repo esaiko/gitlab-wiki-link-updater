@@ -14,6 +14,7 @@ class GitlabWikiPageLinkUpdater {
 	protected $client;
 	protected $projectName;
 	protected $project;
+    protected $projects=[];
 	protected $wikipages=[];
 	protected $slugs=[];
 	protected $backlinks=[];
@@ -106,8 +107,13 @@ class GitlabWikiPageLinkUpdater {
 		return true;
 	}
 	public function selectProject(){
-		$projects=$this->client->projects()->all();
-		foreach($projects as $project){
+        try {
+            $this->projects = $this->client->projects()->all();
+        } catch (Exception $e) {
+            $this->err(__FUNCTION__,__LINE__,'projects->all() failed, error:',$e->getMessage());
+           return false;
+        }
+		foreach($this->projects as $project){
 			if($project['name']==$this->projectName){
 				$this->project=$project;
 				return $this->project;
@@ -140,7 +146,7 @@ class GitlabWikiPageLinkUpdater {
 			$this->dumpMDfiles();
 		}
         if($this->dumpData)
-            $this->dumpDebugData();
+            $this->dumpData();
 		$this->info(__FUNCTION__,'end processing');
 		return $n;
 	}
@@ -153,13 +159,18 @@ class GitlabWikiPageLinkUpdater {
 	protected function find_linked_slugs($content){
         $content2=$this->clean_content($content);
 	    $links=[];
+        // Page links https://docs.gitlab.com/user/project/wiki/markdown/#links
 	    foreach($this->slugs as $slug=>$title){
             $tags=[
                 '('.$slug.')',
                 '|'.$slug.']]',
                 '[['.$slug.']]',
+                '[wiki_page:'.$slug.']',
                 $this->project['web_url'].'/-/wikis/'.$slug,
             ];
+            foreach($this->projects as $project){
+                $tags[]='[wiki_page:'.$project['path_with_namespace'].':'.$slug.']';
+            }
             foreach($tags as $tag){
                 if(mb_strpos($content2,$tag)!==false){
                     if(!in_array($slug,$links)){
@@ -394,16 +405,17 @@ class GitlabWikiPageLinkUpdater {
 		return $dir.'/'.date('Y-m-d').'.log';
 
 	}
-    protected function dumpDebugData(){
-        if(!is_dir($this->workDir.'/debugData')) {
-            mkdir($this->workDir . '/debugData', 0777, true);
-            chmod($this->workDir . '/debugData', 0777);
+    protected function dumpData(){
+        $dumpDir=$this->workDir.'/data';
+        if(!is_dir($dumpDir)) {
+            mkdir($dumpDir, 0777, true);
+            chmod($dumpDir, 0777);
         }
-        file_put_contents($this->workDir . '/debugData/wikipages.json',json_encode($this->wikipages,JSON_PRETTY_PRINT));
-        file_put_contents($this->workDir . '/debugData/slugs.json',json_encode($this->slugs,JSON_PRETTY_PRINT));
-        file_put_contents($this->workDir . '/debugData/pageLinks.json',json_encode($this->pageLinks,JSON_PRETTY_PRINT));
-        file_put_contents($this->workDir . '/debugData/subpages.json',json_encode($this->subpages,JSON_PRETTY_PRINT));
-        file_put_contents($this->workDir . '/debugData/backlinks.json',json_encode($this->backlinks,JSON_PRETTY_PRINT));
+        file_put_contents($dumpDir . '/wikipages.json',json_encode($this->wikipages,JSON_PRETTY_PRINT));
+        file_put_contents($dumpDir . '/slugs.json',json_encode($this->slugs,JSON_PRETTY_PRINT));
+        file_put_contents($dumpDir . '/pageLinks.json',json_encode($this->pageLinks,JSON_PRETTY_PRINT));
+        file_put_contents($dumpDir . '/subpages.json',json_encode($this->subpages,JSON_PRETTY_PRINT));
+        file_put_contents($dumpDir . '/backlinks.json',json_encode($this->backlinks,JSON_PRETTY_PRINT));
         return true;
     }
 	public function getConfigFile(){

@@ -76,7 +76,7 @@ You can view the proposed changes in fikes ../work/MD/...
 php getAll.php
 ```
 
-This creates file ../work/debugData/wikipages.json with the wiki content. Modified pages have property 'content_orig' with the original content. 
+This creates file ../work/data/wikipages.json with the wiki content. Modified pages have property 'content_orig' with the original content. 
 
 
 ### Update pages
@@ -93,7 +93,7 @@ php getAll-and-putAkk.php
 ### Just put pages back to Gitlab wiki
 This action puts changed pages to Gitlab
 ```
-php putAll.php [../work/debugData/wikipages.json]
+php putAll.php [../work/data/wikipages.json]
 ```
 
 ## Webhook 
@@ -145,6 +145,9 @@ Check also logs in your webhook server work/logs/YYYY-MM-DD.log:
 2025-10-15 11:12:05 [688841] INFO HTTP 200 updated 0 pages
 ```
 
+## Data
+
+Data files are written in  directory ../work/data
 
 ## Logs
 Logfile is ../work/log/YYYY-MM-DD.log
